@@ -115,8 +115,13 @@ public class cURL {
         var response = cURLResponse(parseMode: parseMode)
         let responsePointer = withUnsafeMutablePointer(to: &response) { UnsafeMutableRawPointer($0) }
         
-        curlHelperSetOptVoid(rawCURL, CURLOPT_HEADERDATA, responsePointer)
-        curlHelperSetOptVoid(rawCURL, CURLOPT_WRITEDATA, responsePointer)
+        #if os(Linux)
+          curlHelperSetOptVoid(rawCURL, CURLOPT_WRITEHEADER, responsePointer)
+          curlHelperSetOptVoid(rawCURL, CURLOPT_FILE, responsePointer)
+        #else
+          curlHelperSetOptVoid(rawCURL, CURLOPT_HEADERDATA, responsePointer)
+          curlHelperSetOptVoid(rawCURL, CURLOPT_WRITEDATA, responsePointer)
+        #endif
 
         curlHelperSetOptFunc(rawCURL, CURLOPT_WRITEFUNCTION) { (data, size, nmemb, userData) -> Int in
 
