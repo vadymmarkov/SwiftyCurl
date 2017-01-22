@@ -66,11 +66,11 @@ var bodyBuff = Data(count: 0)
 var headerPointer = withUnsafeMutablePointer(to: &headerBuff) { $0 }
 var bodyPointer = withUnsafeMutablePointer(to: &bodyBuff) { $0 }
 #if os(Linux)
-  curlHelperSetOptVoid(rawCURL, CURLOPT_WRITEHEADER, responsePointer)
-  curlHelperSetOptVoid(rawCURL, CURLOPT_FILE, responsePointer)
+  curlHelperSetOptVoid(rawcon, CURLOPT_WRITEHEADER, headerPointer)
+  curlHelperSetOptVoid(rawcon, CURLOPT_FILE, bodyPointer)
 #else
-  curlHelperSetOptVoid(rawCURL, CURLOPT_HEADERDATA, responsePointer)
-  curlHelperSetOptVoid(rawCURL, CURLOPT_WRITEDATA, responsePointer)
+  curlHelperSetOptVoid(rawcon, CURLOPT_HEADERDATA, headerPointer)
+  curlHelperSetOptVoid(rawcon, CURLOPT_WRITEDATA, bodyPointer)
 #endif
 
 curlHelperSetOptFunc(rawcon, CURLOPT_WRITEFUNCTION) { (data, size, nmemb, userData) -> Int in
